@@ -1,0 +1,35 @@
+service: aws-node-telegram-echo-bot
+
+custom:
+  bucket: "palutca"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+        - s3:GetObjectAcl
+        - s3:PutObjectAcl
+        - s3:ListBucket
+      Resource:
+        - "arn:aws:s3:::${self:custom.bucket}/*"
+        - "arn:aws:s3:::${self:custom.bucket}"
+  region: eu-central-1
+  stage: dev
+
+functions:
+  webhook:
+    handler: handler.webhook
+    events:
+      - http:
+          path: webhook
+          method: post
+    environment: ${file(./config.json):ENV}
+  cronjob:
+    handler: handler.cronjob
+    events:
+      - schedule: rate(4 hours)
+    environment: ${file(./config.json):ENV}

@@ -1,0 +1,8 @@
+{
+  "ENV": {
+    "BUCKET": "palutca",
+    "SUBSCRIBER_KEY": "subscribers.json",
+    "TELEGRAM_TOKEN": "1086139839:AAGJ4lagJiG-IRt2RD_5T_5pk_-euGGEaSQ",
+    "TELEGRAM_BASE_URL": "https://api.telegram.org"
+  }
+}
