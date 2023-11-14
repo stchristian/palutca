@@ -1,35 +1,102 @@
-service: aws-node-telegram-echo-bot
+org: rezsidemon
+app: page-scraper
+service: page-scraper
+useDotenv: true
 
 custom:
-  bucket: "palutca"
+  bucket: "page-scraper"
 
 provider:
   name: aws
-  runtime: nodejs12.x
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - s3:PutObject
-        - s3:GetObject
-        - s3:GetObjectAcl
-        - s3:PutObjectAcl
-        - s3:ListBucket
-      Resource:
-        - "arn:aws:s3:::${self:custom.bucket}/*"
-        - "arn:aws:s3:::${self:custom.bucket}"
+  runtime: nodejs18.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:GetObjectAcl
+            - s3:PutObjectAcl
+            - s3:ListBucket
+          Resource:
+            - arn:aws:s3:::${self:custom.bucket}/*
+            - arn:aws:s3:::${self:custom.bucket}
+        - Effect: Allow
+          Action:
+            - iam:PassRole
+          Resource:
+            - arn:aws:iam::${aws:accountId}:role/InvokeScraperRole
+        - Effect: Allow
+          Action:
+            - events:PutRule
+            - events:PutTargets
+            - events:RemoveTargets
+            - events:DeleteRule
+            - events:DescribeRule
+            - events:EnableRule
+            - events:DisableRule
+            - events:TagResource
+            - events:ListTagsForResource
+            - events:ListRules
+            - events:ListTargetsByRule
+          Resource:
+            - arn:aws:events:${aws:region}:${aws:accountId}:rule/*
   region: eu-central-1
   stage: dev
 
 functions:
+  ping:
+    handler: handler.ping
+    environment:
+      TELEGRAM_TOKEN: ${param:TELEGRAM_TOKEN}
+      SCRAPE_FUNCTION_ARN: !GetAtt ScraperLambdaFunction.Arn
   webhook:
     handler: handler.webhook
     events:
       - http:
           path: webhook
           method: post
-    environment: ${file(./config.json):ENV}
-  cronjob:
-    handler: handler.cronjob
-    events:
-      - schedule: rate(4 hours)
-    environment: ${file(./config.json):ENV}
+    environment:
+      TELEGRAM_TOKEN: ${param:TELEGRAM_TOKEN}
+      TELEGRAM_API_BASE_URL: ${param:TELEGRAM_API_BASE_URL}
+      SCRAPE_FUNCTION_ARN: !GetAtt ScraperLambdaFunction.Arn
+      # INVOKE_SCRAPER_ROLE: arn:aws:iam::${aws:accountId}:role/InvokeScraperRole
+  scraper:
+    handler: handler.scraper
+  # cronjob:
+  #   handler: handler.cronjob
+  #   events:
+  #     - schedule: rate(4 hours)
+  #   environment: ${file(./config.json):ENV}
+
+resources:
+  Resources:
+    EventBridgeLambdaPermission:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName: !GetAtt ScraperLambdaFunction.Arn
+        Action: lambda:InvokeFunction
+        Principal: events.amazonaws.com
+    # InvokeScraperRole:
+    #   Type: AWS::IAM::Role
+    #   Properties:
+    #     RoleName: InvokeScraperRole
+    #     AssumeRolePolicyDocument:
+    #       Version: "2012-10-17"
+    #       Statement:
+    #         - Effect: Allow
+    #           Principal:
+    #             Service:
+    #               - lambda.amazonaws.com
+    #           Action: sts:AssumeRole
+    #     Policies:
+    #       - PolicyName: FunctionInvokePolicy
+    #         PolicyDocument:
+    #           Version: "2012-10-17"
+    #           Statement:
+    #             - Effect: Allow
+    #               Action:
+    #                 - lambda:InvokeFunction
+    #               Resource:
+    #                 - !GetAtt ScraperLambdaFunction.Arn
