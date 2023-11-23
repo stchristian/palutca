@@ -1,0 +1,128 @@
+{
+  "ok": true,
+  "result": [
+    {
+      "update_id": 558315970,
+      "message": {
+        "message_id": 672,
+        "from": {
+          "id": 486898237,
+          "is_bot": false,
+          "first_name": "Krisztián",
+          "language_code": "fr"
+        },
+        "chat": {
+          "id": 486898237,
+          "first_name": "Krisztián",
+          "type": "private"
+        },
+        "date": 1698268578,
+        "text": "Helo"
+      }
+    },
+    {
+      "update_id": 558315971,
+      "message": {
+        "message_id": 673,
+        "from": {
+          "id": 486898237,
+          "is_bot": false,
+          "first_name": "Krisztián",
+          "language_code": "fr"
+        },
+        "chat": {
+          "id": 486898237,
+          "first_name": "Krisztián",
+          "type": "private"
+        },
+        "date": 1698268585,
+        "text": "/subscribe",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 10,
+            "type": "bot_command"
+          }
+        ]
+      }
+    },
+    {
+      "update_id": 558315972,
+      "message": {
+        "message_id": 674,
+        "from": {
+          "id": 486898237,
+          "is_bot": false,
+          "first_name": "Krisztián",
+          "language_code": "fr"
+        },
+        "chat": {
+          "id": 486898237,
+          "first_name": "Krisztián",
+          "type": "private"
+        },
+        "date": 1698268631,
+        "text": "/unsubscribe",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 12,
+            "type": "bot_command"
+          }
+        ]
+      }
+    },
+    {
+      "update_id": 558315973,
+      "message": {
+        "message_id": 675,
+        "from": {
+          "id": 486898237,
+          "is_bot": false,
+          "first_name": "Krisztián",
+          "language_code": "fr"
+        },
+        "chat": {
+          "id": 486898237,
+          "first_name": "Krisztián",
+          "type": "private"
+        },
+        "date": 1698268807,
+        "text": "/mybots",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 7,
+            "type": "bot_command"
+          }
+        ]
+      }
+    },
+    {
+      "update_id": 558315974,
+      "message": {
+        "message_id": 676,
+        "from": {
+          "id": 486898237,
+          "is_bot": false,
+          "first_name": "Krisztián",
+          "language_code": "fr"
+        },
+        "chat": {
+          "id": 486898237,
+          "first_name": "Krisztián",
+          "type": "private"
+        },
+        "date": 1698269873,
+        "text": "/description",
+        "entities": [
+          {
+            "offset": 0,
+            "length": 12,
+            "type": "bot_command"
+          }
+        ]
+      }
+    }
+  ]
+}
