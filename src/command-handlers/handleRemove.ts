@@ -2,19 +2,17 @@ import { ResourceNotFoundException } from "@aws-sdk/client-eventbridge";
 import { string, tuple } from "yup";
 import { messages } from "../botTexts.js";
 import { notificationService } from "../notificationService.js";
+import { CommandHandler } from "../command.types.js";
 
-export async function handleResume(message, cmd, params) {
+export const handleRemove: CommandHandler = async (message, cmd, params) => {
   const [name] = params;
 
-  const notificationId = notificationService.getNotificationId(
-    name,
-    message.from.id
-  );
+  const notificationId = notificationService.getNotificationId(name, message.from.id);
 
   try {
-    await notificationService.enableNotification(notificationId);
+    await notificationService.deleteNotification(notificationId);
 
-    return messages.notificationResumedSuccessfully;
+    return messages.notificationRemovedSuccessfully;
   } catch (error) {
     console.log(error);
     if (error instanceof ResourceNotFoundException) {
@@ -22,8 +20,6 @@ export async function handleResume(message, cmd, params) {
     }
     return error.message;
   }
-}
+};
 
-handleResume.schema = tuple([
-  string().label("name").required("Name is required"),
-]);
+handleRemove.schema = tuple([string().label("name").required("Name is required")]);

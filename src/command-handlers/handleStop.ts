@@ -3,13 +3,10 @@ import { string, tuple } from "yup";
 import { messages } from "../botTexts.js";
 import { notificationService } from "../notificationService.js";
 
-export async function handleStop(message, cmd, params) {
+export const handleStop = async (message, cmd, params) => {
   const [name] = params;
 
-  const notificationId = notificationService.getNotificationId(
-    name,
-    message.from.id
-  );
+  const notificationId = notificationService.getNotificationId(name, message.from.id);
 
   try {
     await notificationService.disableNotification(notificationId);
@@ -21,8 +18,6 @@ export async function handleStop(message, cmd, params) {
     }
     return error.message;
   }
-}
+};
 
-handleStop.schema = tuple([
-  string().label("name").required("Name is required"),
-]);
+handleStop.schema = tuple([string().label("name").required("Name is required")]);

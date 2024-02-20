@@ -3,18 +3,15 @@ import { string, tuple } from "yup";
 import { messages } from "../botTexts.js";
 import { notificationService } from "../notificationService.js";
 
-export async function handleRemove(message, cmd, params) {
+export const handleResume = async (message, cmd, params) => {
   const [name] = params;
 
-  const notificationId = notificationService.getNotificationId(
-    name,
-    message.from.id
-  );
+  const notificationId = notificationService.getNotificationId(name, message.from.id);
 
   try {
-    await notificationService.deleteNotification(notificationId);
+    await notificationService.enableNotification(notificationId);
 
-    return messages.notificationRemovedSuccessfully;
+    return messages.notificationResumedSuccessfully;
   } catch (error) {
     console.log(error);
     if (error instanceof ResourceNotFoundException) {
@@ -22,8 +19,6 @@ export async function handleRemove(message, cmd, params) {
     }
     return error.message;
   }
-}
+};
 
-handleRemove.schema = tuple([
-  string().label("name").required("Name is required"),
-]);
+handleResume.schema = tuple([string().label("name").required("Name is required")]);
