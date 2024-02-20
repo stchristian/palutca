@@ -1,9 +1,9 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { createHash } from "crypto";
-import { getTextHashForRule, saveHashForRule } from "./hashStore.js";
 import { sendMessage } from "./telegramService.js";
 import { messages } from "./botTexts.js";
+import { notificationService } from "./notificationService.js";
 
 async function downloadHtmlByUrl(url) {
   console.log(`Download html from: ${url}`);
@@ -38,7 +38,9 @@ export async function checkContentChange(event) {
   const text = extractTextContentFromHtml(html, event.selector);
 
   const newHash = md5(text);
-  const oldHash = await getTextHashForRule(event.ruleName);
+  const oldHash = await notificationService.getContentHashForNotification(
+    event.id
+  );
 
   console.log(`Old hash: ${oldHash}\nNew hash: ${newHash}`);
 
@@ -50,6 +52,9 @@ export async function checkContentChange(event) {
   }
 
   if (shouldSaveNewHash(oldHash, newHash)) {
-    await saveHashForRule(event.ruleName, newHash);
+    await notificationService.updateContentHashForNotification(
+      event.id,
+      newHash
+    );
   }
 }

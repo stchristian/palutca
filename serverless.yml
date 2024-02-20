@@ -3,6 +3,9 @@ app: page-scraper
 service: page-scraper
 useDotenv: true
 
+plugins:
+  - serverless-plugin-typescript
+
 custom:
   bucket: "page-scraper"
 
@@ -64,6 +67,9 @@ functions:
       # INVOKE_SCRAPER_ROLE: arn:aws:iam::${aws:accountId}:role/InvokeScraperRole
   scraper:
     handler: handler.scraper
+    environment:
+      TELEGRAM_TOKEN: ${param:TELEGRAM_TOKEN}
+      TELEGRAM_API_BASE_URL: ${param:TELEGRAM_API_BASE_URL}
   # cronjob:
   #   handler: handler.cronjob
   #   events:

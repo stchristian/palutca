@@ -19,5 +19,9 @@
     "axios": "^1.5.1",
     "cheerio": "^1.0.0-rc.12",
     "yup": "^1.3.2"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.129",
+    "serverless-plugin-typescript": "^2.1.5"
   }
 }

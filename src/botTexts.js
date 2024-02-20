@@ -3,7 +3,7 @@ export const messages = {
   toListItem: (item, index) =>
     `${index + 1}.\nName: ${item.name}\nUrl: ${item.url}\nSelector: ${
       item.selector
-    }\nSchedule: ${item.schedule}\n`,
+    }\nSchedule: ${item.schedule}\nState: ${item.state}`,
 
   hello: (firstName, lastName) => `Hello dear ${firstName} ${lastName}`,
   notificationSuccessfullySetUp:
@@ -17,4 +17,6 @@ export const messages = {
   unknownCommand: (cmd) => `Unknown command: ${cmd}`,
   notifyUser: (url, name) =>
     `Notification ${name}: The content of your site with the following url ${url} has changed. `,
+  selectorUpdatedSuccessfully: "Selector has been updated successfully",
+  scheduleUpdatedSuccessfully: "Schedule has been updated successfully",
 };

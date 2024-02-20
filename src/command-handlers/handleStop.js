@@ -1,20 +1,21 @@
 import { ResourceNotFoundException } from "@aws-sdk/client-eventbridge";
 import { string, tuple } from "yup";
 import { messages } from "../botTexts.js";
-import { getEventBridgeRuleName } from "./handleRemove.js";
-import { disableRule } from "../eventBridgeService.js";
+import { notificationService } from "../notificationService.js";
 
 export async function handleStop(message, cmd, params) {
   const [name] = params;
 
-  const ruleName = getEventBridgeRuleName(name, message.from.id);
+  const notificationId = notificationService.getNotificationId(
+    name,
+    message.from.id
+  );
 
   try {
-    const response = disableRule(ruleName);
-    console.log("Disable rule response", response);
+    await notificationService.disableNotification(notificationId);
+
     return messages.notificationStoppedSuccessfully;
   } catch (error) {
-    console.log(error);
     if (error instanceof ResourceNotFoundException) {
       return messages.notificationDoesNotExist(name);
     }

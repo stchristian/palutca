@@ -1,14 +1,17 @@
 import { string, tuple } from "yup";
-import { getEventBridgeRuleName } from "./handleRemove.js";
 import { messages } from "../botTexts.js";
-import { putRuleAndTarget } from "../eventBridgeService.js";
+import { notificationService } from "../notificationService.js";
 
 export async function handleScrape(message, cmd, params) {
   const [name, url, selector, schedule] = params;
   const telegramUserId = message.from.id;
-  const ruleName = getEventBridgeRuleName(name, telegramUserId);
 
-  await putRuleAndTarget(ruleName, {
+  const notificationId = notificationService.getNotificationId(
+    name,
+    telegramUserId
+  );
+
+  await notificationService.createNotification(notificationId, {
     name,
     url,
     selector,
